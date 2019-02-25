@@ -37,26 +37,26 @@ public class GUIController : MonoBehaviour {
 	public void UpdateCity() {
 		City city = PlayerController.instance.currentCity;
 		nodeName.text = city.nodeName;
-		int turns = Mathf.CeilToInt((City.GROWTH - city.GetTot(Res.FOOD)) / (float)city.GetProd(Res.FOOD));
+		int turns = Mathf.CeilToInt((City.GROWTH - city.GetTot(Res.DATA)) / (float)city.GetProd(Res.DATA));
 		pop.text = "POP:  " + city.pop + " - New in " + turns + " Turns";
 		Building build = city.GetBulidQueue();
 		if (build != null) {
-			turns = Mathf.CeilToInt((build.cost - city.GetTot(Res.IND)) / (float)city.GetProd(Res.IND));
+			turns = Mathf.CeilToInt((build.cost - city.GetTot(Res.PROCESS)) / (float)city.GetProd(Res.PROCESS));
 			buildTime.text = "Done in " + turns + " Turns";
 		}
 		else {
 			buildTime.text = "";
 		}
-		foodTot.text = "FOOD:  " + city.GetTot(Res.FOOD);
-		indTot.text = "IND:  " + city.GetTot(Res.IND);
-		goldTot.text = "GOLD:  " + city.GetTot(Res.GOLD);
-		infTot.text = "INF:  " + city.GetTot(Res.INF);
+		foodTot.text = "FOOD:  " + city.GetTot(Res.DATA);
+		indTot.text = "IND:  " + city.GetTot(Res.PROCESS);
+		goldTot.text = "GOLD:  " + city.GetTot(Res.GRAPHICS);
+		infTot.text = "INF:  " + city.GetTot(Res.EVOLVE);
 		stabilityTot.text = "STAB:  " + city.GetTot(Res.STABILITY) + "%";
 		
-		foodProd.text = "FOOD:  " + city.GetProd(Res.FOOD);
-		indProd.text = "IND:  " + city.GetProd(Res.IND);
-		goldProd.text = "GOLD:  " + city.GetProd(Res.GOLD);
-		infProd.text = "INF:  " + city.GetProd(Res.INF);
+		foodProd.text = "FOOD:  " + city.GetProd(Res.DATA);
+		indProd.text = "IND:  " + city.GetProd(Res.PROCESS);
+		goldProd.text = "GOLD:  " + city.GetProd(Res.GRAPHICS);
+		infProd.text = "INF:  " + city.GetProd(Res.EVOLVE);
 
 		for (int i = 0; i < hardwareText.Length; i++) {
 			if (i >= city.hardwares.Count)
@@ -74,7 +74,7 @@ public class GUIController : MonoBehaviour {
 		City city = PlayerController.instance.currentCity;
 		Building build = city.GetBulidQueue();
 		if (build != null) {
-			int turns = Mathf.CeilToInt((build.cost - city.GetTot(Res.IND)) / (float)city.GetProd(Res.IND));
+			int turns = Mathf.CeilToInt((build.cost - city.GetTot(Res.PROCESS)) / (float)city.GetProd(Res.PROCESS));
 			buildTime.text = "Done in " + turns + " Turns";
 		}
 		else {
@@ -92,7 +92,7 @@ public class GUIController : MonoBehaviour {
 		City city = PlayerController.instance.currentCity;
 		TrainUnit train = city.GetTrainQueue();
 		if (train != null) {
-			int amount = train.ProduceAmount(city.GetTot(Res.IND) + city.GetProd(Res.IND));
+			int amount = train.ProduceAmount(city.GetTot(Res.PROCESS) + city.GetProd(Res.PROCESS));
 			buildTime.text = "Training " + amount + " per turn";
 		}
 		else {

@@ -17,12 +17,12 @@ public class CityController : MonoBehaviour {
 		City city = PlayerController.instance.currentCity;
 		city.Produce();
 		
-		if (city.buildQueue != null && city.GetTot(Res.IND) >= city.buildQueue.cost) {
-			city.ChangeTot(Res.IND, city.buildQueue.cost);
+		if (city.buildQueue != null && city.GetTot(Res.PROCESS) >= city.buildQueue.cost) {
+			city.ChangeTot(Res.PROCESS, city.buildQueue.cost);
 			city.buildings.Add(city.buildQueue);
 			city.buildQueue = null;
 		}
-		else if (city.unitQueue != null && city.GetTot(Res.IND) >= city.unitQueue.cost) {
+		else if (city.unitQueue != null && city.GetTot(Res.PROCESS) >= city.unitQueue.cost) {
 
 		}
 		gui.UpdateCity();

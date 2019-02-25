@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum Res { FOOD, IND, GOLD, INF, STABILITY }
+public enum Res { DATA, PROCESS, GRAPHICS, EVOLVE, STABILITY }
 
 [System.Serializable]
 public class City {
@@ -68,16 +68,16 @@ public class City {
 
 	public void ChangeTot(Res type, int amount) {
 		switch (type) {
-		case Res.FOOD:
+		case Res.DATA:
 			foodTot += amount;
 			break;
-		case Res.GOLD:
+		case Res.GRAPHICS:
 			goldTot += amount;
 			break;
-		case Res.IND:
+		case Res.PROCESS:
 			indTot += amount;
 			break;
-		case Res.INF:
+		case Res.EVOLVE:
 			infTot += amount;
 			break;
 		}
@@ -85,13 +85,13 @@ public class City {
 	
 	public int GetTot(Res type) {
 		switch (type) {
-		case Res.FOOD:
+		case Res.DATA:
 			return foodTot;
-		case Res.GOLD:
+		case Res.GRAPHICS:
 			return goldTot;
-		case Res.IND:
+		case Res.PROCESS:
 			return indTot;
-		case Res.INF:
+		case Res.EVOLVE:
 			return infTot;
 		case Res.STABILITY:
 			return stabilityTot + pop * stabProd;
@@ -102,24 +102,39 @@ public class City {
 	
 	public int GetProd(Res type) {
 		switch (type) {
-		case Res.FOOD:
+		case Res.DATA:
 			return (foodProd - EAT) * pop + BuildingProd(type);
-		case Res.GOLD:
+		case Res.GRAPHICS:
 			return goldProd * pop - TotalUpkeep() + BuildingProd(type);
-		case Res.IND:
+		case Res.PROCESS:
 			return indProd * pop + BuildingProd(type);
-		case Res.INF:
+		case Res.EVOLVE:
 			return infProd * pop + BuildingProd(type);
 		default:
 			return -1;
 		}
 	}
-	
+
+	public int GetBaseProd(Res type) {
+		switch(type) {
+			case Res.DATA:
+				return foodProd;
+			case Res.GRAPHICS:
+				return goldProd;
+			case Res.PROCESS:
+				return indProd;
+			case Res.EVOLVE:
+				return infProd;
+			default:
+				return -1;
+		}
+	}
+
 	public void Produce() {
-		foodTot += GetProd(Res.FOOD);
-		indTot += GetProd(Res.IND);
-		goldTot += GetProd(Res.GOLD);
-		infTot += GetProd(Res.INF);
+		foodTot += GetProd(Res.DATA);
+		indTot += GetProd(Res.PROCESS);
+		goldTot += GetProd(Res.GRAPHICS);
+		infTot += GetProd(Res.EVOLVE);
 		
 		if (foodTot >= GROWTH) {
 			foodTot -= GROWTH;
@@ -140,16 +155,16 @@ public class City {
 		for (int i = 0; i < buildings.Count; i++) {
 			Building b = buildings[i];
 			switch (type) {
-			case Res.FOOD:
+			case Res.DATA:
 				sum += b.foodProd;
 				break;
-			case Res.GOLD:
+			case Res.GRAPHICS:
 				sum += b.goldProd;
 				break;
-			case Res.IND:
+			case Res.PROCESS:
 				sum += b.indProd;
 				break;
-			case Res.INF:
+			case Res.EVOLVE:
 				sum += b.infProd;
 				break;
 			case Res.STABILITY:
