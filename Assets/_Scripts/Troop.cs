@@ -34,18 +34,35 @@ public class Troop {
 	}
 
 	public void AddUnit(UnitType unit, int amount) {
-		int index = -1;
-		for(int j = 0; j < unitList.Count; j++) {
-			if(unitList[j].type == unit) {
-				index = j;
-				break;
-			}
-		}
+		Unit found = GetUnit(unit);
 
-		if(index == -1) {
+		if(found == null) {
 			unitList.Add(new Unit() { type = unit, amount = amount });
 		} else {
-			unitList[index].amount += amount;
+			found.amount += amount;
+		}
+	}
+
+	public Unit GetUnit(UnitType type) {
+		for(int i = 0; i < unitList.Count; i++) {
+			if(unitList[i].type == type) {
+				return unitList[i];
+			}
+		}
+		return null;
+	}
+
+	public void KillUnits(Troop survivors) {
+		if (survivors == null) {
+			for(int i = 0; i < unitList.Count; i++) {
+				unitList[i].amount = 0;
+			}
+		}
+		else {
+			for(int i = 0; i < unitList.Count; i++) {
+				Unit found = survivors.GetUnit(unitList[i].type);
+				unitList[i].amount = (found == null) ? 0 : found.amount;
+			}
 		}
 	}
 
@@ -84,32 +101,42 @@ public class Troop {
 	public static void Fight(Troop atkTroop, Troop defTroop) {
 		int atkPwr = atkTroop.AtkPower();
 		int defPwr = defTroop.DefPower();
+		bool attackerWin = (atkPwr >= defPwr);
 
 		Troop survivors = new Troop();
 		List<UnitType> army = new List<UnitType>();
 		int armySize = 0;
-		Troop winner = (atkPwr > defPwr) ? atkTroop : defTroop;
-		for(int i = 0; i < atkTroop.unitList.Count; i++) {
-			armySize += atkTroop.unitList[i].amount;
-			for(int u = 0; u < atkTroop.unitList[i].amount; u++) {
-				army.Add(atkTroop.unitList[i].type);
+		Troop winner = (attackerWin) ? atkTroop : defTroop;
+		for(int i = 0; i < winner.unitList.Count; i++) {
+			armySize += winner.unitList[i].amount;
+			for(int u = 0; u < winner.unitList[i].amount; u++) {
+				army.Add(winner.unitList[i].type);
 			}
-		}
-		if (atkPwr > defPwr) {
 		}
 
 		Debug.Log("Army size:  " + armySize);
 		UnitType type;
 		Debug.Log("Fighting...");
-		while (atkPwr >= defPwr) {
+		int stronger = (attackerWin) ? atkPwr : defPwr;
+		int weaker = (attackerWin) ? defPwr : atkPwr;
+		while (stronger >= weaker) {
 			int index = Random.Range(0, armySize);
 			type = army[index];
 			army.RemoveAt(index);
 			survivors.AddUnit(type, 1);
-			atkPwr -= Unit.AtkPower(type);
+			stronger -= Unit.AtkPower(type);
 			armySize--;
 		}
 		Debug.Log("Survivors");
 		survivors.Print();
+
+		if (attackerWin) {
+			atkTroop.KillUnits(survivors);
+			defTroop.KillUnits(null);
+		}
+		else {
+			atkTroop.KillUnits(null);
+			defTroop.KillUnits(survivors);
+		}	
 	}
 }

@@ -19,6 +19,7 @@ public class MapNodeClicker : MonoBehaviour {
 	public Transform unitPrefab;
 	public Transform attackParent;
 	public Transform defendParent;
+	public GameObject fightButton;
 
 	[Header("Units")]
 	public Text unitPower;
@@ -104,6 +105,7 @@ public class MapNodeClicker : MonoBehaviour {
 
 	private void ShowFightScreen() {
 		fightScreen.SetActive(true);
+		fightButton.SetActive(true);
 		for(int i = 0; i < attackParent.childCount; i++) {
 			Destroy(attackParent.GetChild(i).gameObject);
 		}
@@ -124,7 +126,20 @@ public class MapNodeClicker : MonoBehaviour {
 		}
 	}
 
+	private void ShowFightDeathScreen() {
+		fightButton.SetActive(false);
+		Troop attack = startCity.cityInfo.troops;
+		Troop defend = targetCity.cityInfo.troops;
+		for(int i = 0; i < attack.unitList.Count; i++) {
+			attackParent.GetChild(i).GetComponentsInChildren<Text>()[2].text = attack.unitList[i].amount.ToString();
+		}
+		for(int i = 0; i < defend.unitList.Count; i++) {
+			defendParent.GetChild(i).GetComponentsInChildren<Text>()[2].text = attack.unitList[i].amount.ToString();
+		}
+	}
+
 	public void StartFight() {
 		Troop.Fight(startCity.cityInfo.troops, targetCity.cityInfo.troops);
+		ShowFightDeathScreen();
 	}
 }
